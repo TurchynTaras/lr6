@@ -1,0 +1,71 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <windows.h>
+
+using namespace std;
+
+struct Monitor {
+    string type;
+    string resolution;
+    int colors;
+};
+
+
+
+void writeMonitorInfoToFile(const string& filename, const Monitor& monitor, int monitorNumber) {
+    ofstream file(filename, ios::app);
+    file << "Монітор #" << monitorNumber << endl
+        << "Тип монітора: " << monitor.type << endl
+        << "Роздільна здатність: " << monitor.resolution << endl
+        << "Кількість кольорів: " << monitor.colors << endl
+        << endl;
+    file.close();
+}
+
+void readMonitorInfoFromFile(const string& filename) {
+    ifstream file(filename);
+    string line;
+    while (getline(file, line)) {
+        cout << line << endl;
+    }
+    file.close();
+}
+
+int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    string filename = "monitor_info.txt";
+    Monitor monitor;
+    int numMonitors;
+
+    ofstream file(filename, ios::trunc);
+    file.close();
+
+    cout << "Введіть кількість моніторів: ";
+    cin >> numMonitors;
+    cin.ignore();
+
+    for (int i = 0; i < numMonitors; i++) {
+        cout << "Монітор #" << i + 1 << endl
+            << "Введіть тип монітора: ";
+        cin.ignore();
+        getline(cin, monitor.type);
+
+        cout << "Введіть роздільну здатність: ";
+        getline(cin, monitor.resolution);
+
+        cout << "Введіть кількість кольорів: ";
+        cin >> monitor.colors;
+        cin.ignore();
+
+        writeMonitorInfoToFile(filename, monitor, i + 1);
+    }
+
+    cout << "Інформацію про монітори записано в файл." << endl;
+
+    cout << "Зчитана інформація з файлу:" << endl;
+    readMonitorInfoFromFile(filename);
+
+    return 0;
+}
